@@ -34,29 +34,30 @@ jumpers: EN,WIFI,USBT,FLASH,WIFI,USBR,FLASH
 
 #### 1.自建開發環境
 1. 安裝python 2.7 (有點老的版本, 如果沒有pyenv環境隔離, 再弄AI相關的專案肯定會衝突)
-""" bash
+``` shell
 #ubuntu ubuntu:20.04
 apt-get update && \
     apt-get install -y gcc git wget make libncurses-dev flex bison gperf python && \
     wget https://bootstrap.pypa.io/pip/2.7/get-pip.py && python get-pip.py && rm -f get-pip.py &&\
     mkdir -p /esp
-"""
+```
 
 2. 安裝ESP8266 toolchains
-""" bash
+``` shell
 mkdir -p /esp
 
 cd /esp && \
     wget https://dl.espressif.com/dl/xtensa-lx106-elf-gcc8_4_0-esp-2020r3-linux-amd64.tar.gz && \
     tar -xzf xtensa-lx106-elf-gcc8_4_0-esp-2020r3-linux-amd64.tar.gz && \
     rm -f xtensa-lx106-elf-gcc8_4_0-esp-2020r3-linux-amd64.tar.gz
-"""
+```
 [xtensa-lx106-elf-gcc8_4_0-esp-2020r3-win32.zip](https://dl.espressif.com/dl/xtensa-lx106-elf-gcc8_4_0-esp-2020r3-win32.zip)
 [old version SDK(< 3.0), please use toolchain v4.8.5](https://dl.espressif.com/dl/xtensa-lx106-elf-win32-1.22.0-88-gde0bdc1-4.8.5.tar.gz)
 
 3. 安裝ESP8266_RTOS_SDK
 [參考](https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/get-started/index.html#get-esp8266-rtos-sdk)
-""" bash
+
+```shell
 cd ~/esp
 git clone --recursive https://github.com/espressif/ESP8266_RTOS_SDK.git
 
@@ -69,15 +70,15 @@ SDK_BRANCH= git clone \
     https://github.com/espressif/ESP8266_RTOS_SDK.git \
     /esp/ESP8266_RTOS_SDK
 
-# Install the Required Python Packages¶
+# Install the Required Python Packages
 # IDF_PATH = ~/esp/ESP8266_RTOS_SDK
 python -m pip install --user -r $IDF_PATH/requirements.txt
-"""
+```
 
 #### 2.利用docker容器 xingrz/esp8266-rtos-builder
 1. xingrz/esp8266-rtos-builder
 Dockerfile 內容如下:
-""" yaml
+``` yaml
 FROM ubuntu:20.04
 
 RUN apt-get update && \
@@ -107,17 +108,17 @@ VOLUME [ "/project" ]
 WORKDIR /project
 
 CMD [ "make" ]
-"""
+```
 
 2. Build, Merge and Flash
 以下都是用docker 容器模式執行, 其中xingrz/esp8266-rtos-builder如上述.
-""" bash
+``` shell
 cd ~/fishbot-laser-control
 
-# make
+##### make
 docker run -it --rm --privileged -v=/dev:/dev  -v `pwd`:`pwd` -w `pwd` xingrz/esp8266-rtos-builder make 
 
-# merge: multiple bin files into one firmware.bin
+##### merge: multiple bin files into one firmware.bin
 docker run -it --rm --privileged -v=/dev:/dev  -v `pwd`:`pwd` -w `pwd` fishros2/fishbot-tool esptool.py \
 --chip ESP8266 merge_bin -o fishbot_laser_control_v1.0.0.`date +%y%m%d`.bin \
 --flash_mode dio \
@@ -126,13 +127,13 @@ docker run -it --rm --privileged -v=/dev:/dev  -v `pwd`:`pwd` -w `pwd` fishros2/
 0x8000 build/partitions_singleapp.bin \
 0x10000 build/uart2udp.bin
 
-# flash
+##### flash
 docker run -it --rm --privileged -v=/dev:/dev  -v `pwd`:`pwd` -w `pwd` xingrz/esp8266-rtos-builder make flash
-"""
+```
 
 而 fishros2/fishbot-tool 是另一個容器, 專門用於fishbot教學燒錄開發板用
 [fishbot_tool](https://github.com/fishros/fishbot_tool)
-""" yaml
+``` yaml
 FROM ubuntu:jammy
 
 RUN apt-get update && apt-get install -y \
@@ -147,4 +148,4 @@ RUN chmod +x /fishbot_tool
 ENTRYPOINT ["/fishbot_tool"]
 
 # docker run -it --rm --privileged -v /dev:/dev  -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY fishbot-tool
-"""
+```
