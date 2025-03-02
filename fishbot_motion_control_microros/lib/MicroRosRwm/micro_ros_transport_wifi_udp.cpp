@@ -16,11 +16,15 @@ extern "C"
   bool platformio_transport_open_wifi_udp(struct uxrCustomTransport *transport)
   {
     struct micro_ros_agent_locator *locator = (struct micro_ros_agent_locator *)transport->args;
+    
+    Serial.print("XXXXX_open_udp: "); Serial.println(locator->port);
+
     return true == udp_client.begin(locator->port);
   }
 
   bool platformio_transport_close_wifi_udp(struct uxrCustomTransport *transport)
   {
+    Serial.println("XXXXX_close_udp");
     udp_client.stop();
     return true;
   }
@@ -38,7 +42,6 @@ extern "C"
     }
 
     udp_client.flush();
-
     return sent;
   }
 

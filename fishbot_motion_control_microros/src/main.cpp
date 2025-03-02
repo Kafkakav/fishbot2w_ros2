@@ -10,6 +10,8 @@
  */
 #include <Arduino.h>
 #include "fishbot.h"
+#include "soc/soc.h"
+#include "soc/rtc_cntl_reg.h"
 
 void fishbot_loop_transport_task(void *param)
 {
@@ -22,6 +24,8 @@ void fishbot_loop_transport_task(void *param)
 
 void setup()
 {
+  // Vince++ For issue - ESP32 Brownout detector was triggered
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
   setup_fishbot();
   xTaskCreatePinnedToCore(fishbot_loop_transport_task, "transport_task", 10240, NULL, 1, NULL, 0);
 }

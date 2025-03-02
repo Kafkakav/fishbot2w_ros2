@@ -20,8 +20,9 @@ sed -i "s/{VERSION}/$GITHUB_REF_NAME/g" include/fishbot_config.h
 pip3 install esptool
 if [ "$PARAM1" == "init" ]; then
     pio lib install # Install dependencies
-    rm -rf .pio/libdeps/fishbot_motion_control_humble/micro_ros_platformio/libmicroros/
 fi
+# clean libmicroros.a
+rm -rf .pio/libdeps/fishbot_motion_control_humble/micro_ros_platformio/libmicroros/
 cp .config/microros/colcon.meta .pio/libdeps/fishbot_motion_control_humble/micro_ros_platformio/metas/colcon.meta
 pio run
 

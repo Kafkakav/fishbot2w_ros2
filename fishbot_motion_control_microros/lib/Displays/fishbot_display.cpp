@@ -187,9 +187,22 @@ void FishBotDisplay::updateDisplayMode(uint8_t display_mode)
     display_mode_ = display_mode;
 }
 
+String replaceNonPrintable(String input, char replacement = '#') {
+    String result = "";
+    for (int i = 0; i < input.length(); i++) {
+      char c = input.charAt(i);
+      if (isPrintable(c)) {
+        result += c;
+      } else {
+        result += replacement;
+      }
+    }
+    return result;
+}
+
 void FishBotDisplay::updateWIFISSID(String ssid)
 {
-    wifi_ssid_ = ssid;
+    wifi_ssid_ = replaceNonPrintable(ssid);
 }
 void FishBotDisplay::updateWIFIPSWD(String pswd)
 {

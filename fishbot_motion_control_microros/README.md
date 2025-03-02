@@ -13,11 +13,24 @@ cd fishbot_motion_control_microros
 ./release.sh
 ```
 
-## Version file
+## Version File
 ``` C
 # File: include/fishbot_config.h
 #define VERSION_CODE "1.0.1p"
 ```
 
-# FishBot运动控制程序MicroROS版
+## FishBot Motion Control Board - MicroROS
 [original source](https://github.com/fishros/fishbot_motion_control_microros)
+
+
+## microros/micro-ros-agent on Host
+``` bash
+# Docker starts network proxy
+docker run -it --rm -v /dev:/dev -v /dev/shm:/dev/shm --privileged --net=host microros/micro-ros-agent:$ROS_DISTRO udp4 --port 8888 -v4
+# Docker starts serial port agent
+docker run -it --rm -v /dev:/dev -v /dev/shm:/dev/shm --privileged --net=host microros/micro-ros-agent:humble serial --dev /dev/ttyUSB0 -b 921600 -v4
+
+sudo tcpdump udp port 8888 -i eno1 -n
+sudo tcpdump udp and net 192.168.16.0/24 -i eno1 -n
+
+```

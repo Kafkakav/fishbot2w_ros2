@@ -81,5 +81,6 @@ bool microros_setup_transport_serial_(HardwareSerial& serial);
 void callback_sensor_publisher_timer_(rcl_timer_t *timer, int64_t last_call_time);
 void callback_twist_subscription_(const void *msgin);
 void callback_config_service_(const void *req, void *res);
+void motion_twist_safestop();
 
 #endif // __FISHBOT_H__

@@ -20,6 +20,14 @@ extern "C"
     size_t platformio_transport_read_wifi_udp(struct uxrCustomTransport *transport, uint8_t *buf, size_t len, int timeout, uint8_t *err);
 }
 
+//Vince++
+typedef void (*CallbackFunction)(const char *msg);
+extern CallbackFunction rwm_uros_Serial;
+static void serail_callback(const char *msg) {
+    Serial.print(msg);
+}
+//Vince--
+
 struct micro_ros_agent_locator
 {
     IPAddress address;
@@ -64,6 +72,10 @@ static bool set_microros_wifi_transports(const char *ssid, const char *pswd, IPA
     static struct micro_ros_agent_locator locator;
     locator.address = agent_ip;
     locator.port = agent_port;
+    
+    //Vince++
+    //rwm_uros_Serial = serail_callback;
+
     // 调用 rmw_uros_set_custom_transport 函数，将自定义的 WiFi 传输函数注册到 Micro-ROS 中
     rmw_uros_set_custom_transport(
         false,
@@ -72,5 +84,6 @@ static bool set_microros_wifi_transports(const char *ssid, const char *pswd, IPA
         platformio_transport_close_wifi_udp,
         platformio_transport_write_wifi_udp,
         platformio_transport_read_wifi_udp);
+
     return true;
 }

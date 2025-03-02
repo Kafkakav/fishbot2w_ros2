@@ -170,9 +170,27 @@ bool setup_fishbot()
     analogReadResolution(12);
     analogSetAttenuation(ADC_11db);
     battery_voltage = 5.02 * ((float)analogReadMilliVolts(34) * 1e-3);
+    state = WAITING_AGENT;
     return true;
 }
-
+static void udpTX_test(const char *key) {
+    static char myUdpcliInit = 0;
+    static WiFiUDP myUdpcli;
+    static IPAddress agentIP;
+    int sent;
+    if (strcmp(key, "udpserver_port") == 0) {
+        if(myUdpcliInit == 0) {
+            Serial.println("udpTX_test_init...");
+            myUdpcli.begin(8888);
+            agentIP.fromString("192.168.16.120");
+            myUdpcliInit = 1;
+        }
+        myUdpcli.beginPacket(agentIP, 8888);
+        sent = myUdpcli.printf("Seconds since boot: %lu", millis() / 1000);
+        myUdpcli.endPacket();
+        Serial.print("udpTX_test: "); Serial.println(sent);
+    }
+}
 static void deal_command(char key[32], char value[32])
 {
     // 检查传入的 "key" 是否为 "command"
@@ -196,6 +214,8 @@ static void deal_command(char key[32], char value[32])
     // 传入的命令不是 "restart" 或 "read_config"
     else
     {
+        //udpTX_test(key);
+        
         // 创建两个 String 对象 "recv_key" 和 "recv_value"
         // 并将传入的 "key" 和 "value" 分别作为参数来初始化这两个对象。
         String recv_key(key);
@@ -373,6 +393,7 @@ void loop_fishbot_transport()
 {
     static char result[10][32];
     static int config_result; // 用于存储解析配置数据的结果
+
     // 不断读取串口数据，直到串口中没有数据可读
     while (Serial.available())
     {
@@ -391,6 +412,7 @@ void loop_fishbot_transport()
             Serial.print("$result=error parse\n");
         }
     }
+
     // 函数根据当前的状态执行不同的操作
     switch (state)
     {
@@ -399,11 +421,11 @@ void loop_fishbot_transport()
     // 该语句用于向MicroROS代理发送ping消息，并检查是否能够收到pong消息。
     // 如果收到pong消息，则将状态设置为AGENT_AVAILABLE；否则保持等待状态。
     case WAITING_AGENT:
-        EXECUTE_EVERY_N_MS(2000, state = (RMW_RET_OK == rmw_uros_ping_agent(100, 5)) ? AGENT_AVAILABLE : WAITING_AGENT;);
+        EXECUTE_EVERY_N_MS(2000, state = (RMW_RET_OK == rmw_uros_ping_agent(500, 5)) ? AGENT_AVAILABLE : WAITING_AGENT;);
         digitalWrite(2, !digitalRead(2));
         if (state == WAITING_AGENT && wifi_status==FISHBOT_WIFI_STATUS_GOT_IP)
         {
-            display.updateWIFIInfo("ping timeout", FISHBOT_WIFI_STATUS_PING_FAILED);
+            display.updateWIFIInfo("ping timeout0", FISHBOT_WIFI_STATUS_PING_FAILED);
         }
         break;
 
@@ -424,10 +446,10 @@ void loop_fishbot_transport()
     // 该语句用于向MicroROS代理发送ping消息，并检查是否能够收到pong消息。
     // 如果收到pong消息，则保持AGENT_CONNECTED状态，并尝试同步时间。
     case AGENT_CONNECTED:
-        EXECUTE_EVERY_N_MS(2000, state = (RMW_RET_OK == rmw_uros_ping_agent(100, 5)) ? AGENT_CONNECTED : AGENT_DISCONNECTED;);
+        EXECUTE_EVERY_N_MS(2000, state = (RMW_RET_OK == rmw_uros_ping_agent(500, 5)) ? AGENT_CONNECTED : AGENT_DISCONNECTED;);
         if (state == AGENT_DISCONNECTED && wifi_status==FISHBOT_WIFI_STATUS_GOT_IP)
         {
-            display.updateWIFIInfo("ping timeout", FISHBOT_WIFI_STATUS_PING_FAILED);
+            display.updateWIFIInfo("ping timeout1", FISHBOT_WIFI_STATUS_PING_FAILED);
         }
         if (state == AGENT_CONNECTED)
         {
@@ -465,6 +487,7 @@ void loop_fishbot_transport()
 
     if (state != AGENT_CONNECTED)
     {
+        motion_twist_safestop();
         delay(10);
     }
 }
@@ -626,4 +649,13 @@ void callback_config_service_(const void *req, void *res)
     fishlog_debug("fishbot", "current_str:%s", config.config_str().c_str());
     sprintf(res_in->key.data, "%s", req_in->key.data);
     sprintf(res_in->value.data, "%s", req_in->key.data);
+}
+
+// Vince++
+void motion_twist_safestop()
+{
+    if(pid_controller[0].target_ != 0 || pid_controller[1].target_ != 0) {
+        pid_controller[0].update_target(0);
+        pid_controller[1].update_target(0);
+    }
 }
