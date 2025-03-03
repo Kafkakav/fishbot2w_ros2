@@ -23,11 +23,21 @@
       <td><img src="https://github.com/Kafkakav/fishbot2w_ros2/blob/main/docs/assets/367084_0.jpg" width="400" height="400"></td>
       <td><img src="https://github.com/Kafkakav/fishbot2w_ros2/blob/main/docs/assets/367083_0.jpg" width="400" height="400"></td>
     </tr>
+    <tr>
+      <td>ROS Web Joystick based on rosbridge websocket</td>
+      <td><img src="https://github.com/Kafkakav/fishbot2w_ros2/blob/main/docs/assets/367125.jpg" width="400" height="400"></td>
+    </tr>
   </tboty>
 </table>
 
-## FishBot 光達轉接板 + YDLIDAR-X2
+### Software
+1. fishbot-laser-control: Wi-Fi laser board (ESP8266 雷達YDLIDAR-X2無線轉接板)
+2. fishbot_motion_control_microros: montion control board (ESP32 驅動控制主板)
+3. ydlidar_ros2: laser ROS2 node
+4. teleop_twist_web: ROS Web Joystick
+5. fishbot-laser-driver: 
 
+## FishBot 光達轉接板 + YDLIDAR-X2
 ### 光達轉接板 ESP-12E(ESP8266)
 #### 光達轉接板功能: 
 1. 接收來自YDLIDAR-X2的 serial Tx/Rx 資料
