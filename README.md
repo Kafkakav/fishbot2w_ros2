@@ -1,3 +1,31 @@
+## ROS2 二輪驅動車
+### Hardware
+1. 驅動主控板 - ESP32 montion control board
+2. 雪達轉接 - ESP8266 UART 轉接Wi-Fi 或 USB
+3. 雷達 - YDLIDAR-X2
+4. 370帶編碼器減速馬達, 驅電機輪胎固定配件, 6P 2.0mm*10cm 馬達連接線
+5. 65MM橡膠輪
+6. 電池 2800ma 12V16A, 壓克力電池固定架, 12V1A充電器
+7. SR04-超聲波
+8. 0.96寸OLED顯示螢幕
+9. 二驅壓克力半圓形底盤, 壓克力S雷達底板, 電壓轉換板, 10cm船型開關線
+<table>
+  <tboty>
+    <tr>
+      <td><img src="https://github.com/Kafkakav/fishbot2w_ros2/blob/main/docs/assets/367089_0.jpg" width="400" height="400"></td>
+      <td><img src="https://github.com/Kafkakav/fishbot2w_ros2/blob/main/docs/assets/367088_0.jpg" width="400" height="400"></td>
+    </tr>
+    <tr>
+      <td><img src="https://github.com/Kafkakav/fishbot2w_ros2/blob/main/docs/assets/367086_0.jpg" width="400" height="400"></td>
+      <td><img src="https://github.com/Kafkakav/fishbot2w_ros2/blob/main/docs/assets/367085_0.jpg" width="400" height="400"></td>
+    </tr>
+    <tr>
+      <td><img src="https://github.com/Kafkakav/fishbot2w_ros2/blob/main/docs/assets/367084_0.jpg" width="400" height="400"></td>
+      <td><img src="https://github.com/Kafkakav/fishbot2w_ros2/blob/main/docs/assets/367083_0.jpg" width="400" height="400"></td>
+    </tr>
+  </tboty>
+</table>
+
 ## FishBot 光達轉接板 + YDLIDAR-X2
 
 ### 光達轉接板 ESP-12E(ESP8266)
