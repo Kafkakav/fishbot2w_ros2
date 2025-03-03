@@ -1,7 +1,7 @@
 ## ROS2 二輪驅動車
 ### Hardware
 1. 驅動主控板 - ESP32 montion control board
-2. 雪達轉接 - ESP8266 UART 轉接Wi-Fi 或 USB
+2. 雷達轉接 - ESP8266 UART 轉接Wi-Fi 或 USB
 3. 雷達 - YDLIDAR-X2
 4. 370帶編碼器減速馬達, 驅電機輪胎固定配件, 6P 2.0mm*10cm 馬達連接線
 5. 65MM橡膠輪
