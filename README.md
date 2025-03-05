@@ -37,6 +37,9 @@
 4. teleop_twist_web: ROS Web Joystick
 5. fishbot-laser-driver: 
 
+### System Architecture
+<img src="https://github.com/Kafkakav/fishbot2w_ros2/blob/main/docs/assets/fishbot2w_ros2.png" width="600" height="600">
+
 ## FishBot 光達轉接板 + YDLIDAR-X2
 ### 光達轉接板 ESP-12E(ESP8266)
 #### 光達轉接板功能: 
